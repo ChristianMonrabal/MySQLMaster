@@ -10,6 +10,8 @@
 <body>
     <div class="container mt-5">
         <?php
+        session_start(); // Inicia la sesión si aún no se ha iniciado
+
         // Verificar si se recibió el nombre de la base de datos como un parámetro GET
         if (isset($_GET['database']) && !empty($_GET['database'])) {
             $database = $_GET['database'];
@@ -49,13 +51,14 @@
                 echo "<div class='text-center mt-4'>";
                 echo "<div class='btn-group'>";
                 echo "<a href='../includes/formulario.php?server=$server&username=$username&password=$password&database=$database&table=$table' class='btn btn-success mr-2'>Insertar datos</a>";
-                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_characteristics&table=$table' class='btn btn-info mr-2'>Características</a>";
+                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_characteristics' class='btn btn-info mr-2'>Características</a>";
                 echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_grants' class='btn btn-warning'>Veure els seus permisos</a>";
                 echo "</div>";
                 echo "</div>";
                 
                 // Verificar si se recibió el nombre de la tabla como un parámetro GET
                 if (isset($_GET['table']) && !empty($_GET['table'])) {
+                    $_SESSION['selected_table'] = $_GET['table'];
                     $table = $_GET['table'];
 
                     // Consulta SQL para seleccionar todo de la tabla especificada
@@ -105,6 +108,9 @@
                 // Verificar si se recibió el parámetro action como un parámetro GET
                 if (isset($_GET['action'])) {
                     if ($_GET['action'] === 'show_characteristics') {
+                        // Obtener el nombre de la tabla seleccionada de la variable de sesión
+                        $table = $_SESSION['selected_table'];
+
                         // Ejecutar la consulta DESCRIBE
                         $sql_describe = "DESCRIBE $table";
                         $result_describe = $conn->query($sql_describe);
