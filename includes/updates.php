@@ -28,6 +28,26 @@
                 die("Error de conexión: " . $conn->connect_error);
             }
 
+            // Verificar si se envió el formulario
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                // Obtener los datos del formulario
+                $update_values = array();
+                foreach ($_POST as $key => $value) {
+                    $update_values[] = "$key='$value'";
+                }
+                $update_query = implode(", ", $update_values);
+
+                // Consulta SQL para actualizar el registro
+                $sql = "UPDATE $table SET $update_query WHERE id=$id";
+
+                // Ejecutar la consulta
+                if ($conn->query($sql) === TRUE) {
+                    echo "<div class='alert alert-success' role='alert'>Registro actualizado correctamente.</div>";
+                } else {
+                    echo "<div class='alert alert-danger' role='alert'>Error al actualizar el registro: " . $conn->error . "</div>";
+                }
+            }
+
             // Consulta SQL para obtener los datos de la fila correspondiente
             $sql = "SELECT * FROM $table WHERE id=$id"; // Reemplaza 'id' con el nombre correcto de tu columna de identificación
 
@@ -38,7 +58,7 @@
                 // Mostrar el formulario con los datos existentes
                 $row = $result->fetch_assoc();
                 ?>
-                <form action="actualizar_registro.php" method="post">
+                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <!-- Crear inputs para cada columna de la fila -->
                     <?php foreach ($row as $column => $value): ?>
                         <?php if ($column != 'id'): ?> <!-- Excluir la columna de ID -->

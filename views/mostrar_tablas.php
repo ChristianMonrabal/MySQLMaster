@@ -45,6 +45,15 @@
                 }
                 echo "</ul>";
 
+                // Botones para agregar datos, ver características y ver permisos
+                echo "<div class='text-center mt-4'>";
+                echo "<div class='btn-group'>";
+                echo "<a href='../includes/formulario.php?server=$server&username=$username&password=$password&database=$database&table=$table' class='btn btn-success mr-2'>Insertar datos</a>";
+                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_characteristics&table=$table' class='btn btn-info mr-2'>Características</a>";
+                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_grants' class='btn btn-warning'>Veure els seus permisos</a>";
+                echo "</div>";
+                echo "</div>";
+                
                 // Verificar si se recibió el nombre de la tabla como un parámetro GET
                 if (isset($_GET['table']) && !empty($_GET['table'])) {
                     $table = $_GET['table'];
@@ -82,8 +91,8 @@
                             // Obtener automáticamente el id de la fila
                             $id = $row_table['id']; // Asegúrate de reemplazar 'id' con el nombre correcto de tu columna de identificación
                             // Botones de editar y eliminar con el id correspondiente
-                            echo "<td><a href='../includes/updates.php?table=$table&id=$id' class='btn btn-primary btn-sm'>Editar</a></td>";
-                            echo "<td><a href='../includes/drops.php?table=$table&id=$id' class='btn btn-danger btn-sm'>Eliminar</a></td>";
+                            echo "<td><a href='../includes/updates.php?server=$server&username=$username&password=$password&database=$database&table=$table&id=$id' class='btn btn-primary btn-sm'>Editar</a></td>";
+                            echo "<td><a href='../includes/drops.php?server=$server&username=$username&password=$password&database=$database&table=$table&id=$id' class='btn btn-danger btn-sm'>Eliminar</a></td>";
                             echo "</tr>";
                         }
                         echo "</tbody>";
@@ -92,6 +101,78 @@
                         echo "<div class='alert alert-danger' role='alert'>Error al obtener el contenido de la tabla: " . $conn->error . "</div>";
                     }
                 }
+
+                // Verificar si se recibió el parámetro action como un parámetro GET
+                if (isset($_GET['action'])) {
+                    if ($_GET['action'] === 'show_characteristics') {
+                        // Ejecutar la consulta DESCRIBE
+                        $sql_describe = "DESCRIBE $table";
+                        $result_describe = $conn->query($sql_describe);
+
+                        // Verificar si la consulta fue exitosa
+                        if ($result_describe) {
+                            // Mostrar las características de la tabla
+                            echo "<h2>Características de la tabla '$table':</h2>";
+                            echo "<table class='table table-bordered'>";
+                            echo "<thead class='thead-dark'>";
+                            echo "<tr>";
+                            echo "<th>Field</th>";
+                            echo "<th>Type</th>";
+                            echo "<th>Null</th>";
+                            echo "<th>Key</th>";
+                            echo "<th>Default</th>";
+                            echo "<th>Extra</th>";
+                            echo "</tr>";
+                            echo "</thead>";
+                            echo "<tbody>";
+                            while ($row_describe = $result_describe->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td>" . $row_describe['Field'] . "</td>";
+                                echo "<td>" . $row_describe['Type'] . "</td>";
+                                echo "<td>" . $row_describe['Null'] . "</td>";
+                                echo "<td>" . $row_describe['Key'] . "</td>";
+                                echo "<td>" . $row_describe['Default'] . "</td>";
+                                echo "<td>" . $row_describe['Extra'] . "</td>";
+                                echo "</tr>";
+                            }
+                            echo "</tbody>";
+                            echo "</table>";
+                        } else {
+                            echo "<div class='alert alert-danger' role='alert'>Error al obtener las características: " . $conn->error . "</div>";
+                        }
+                    } elseif ($_GET['action'] === 'show_grants') {
+                        // Ejecutar la consulta SHOW GRANTS
+                        $sql_grants = "SHOW GRANTS";
+                        $result_grants = $conn->query($sql_grants);
+
+                        // Verificar si la consulta fue exitosa
+                        if ($result_grants) {
+                            // Mostrar los resultados de SHOW GRANTS en un div con desplazamiento vertical
+                            echo "<div style='overflow-x: auto;'>";
+                            echo "<h2>Permisos del usuario en la base de datos '$database':</h2>";
+                            echo "<table class='table table-bordered'>";
+                            echo "<thead class='thead-dark'>";
+                            echo "<tr>";
+                            echo "<th>Grants</th>";
+                            echo "</tr>";
+                            echo "</thead>";
+                            echo "<tbody>";
+                            while ($row_grants = $result_grants->fetch_assoc()) {
+                                echo "<tr>";
+                                foreach ($row_grants as $grant) {
+                                    echo "<td>$grant</td>";
+                                }
+                                echo "</tr>";
+                            }
+                            echo "</tbody>";
+                            echo "</table>";
+                            echo "</div>";
+                        } else {
+                            echo "<div class='alert alert-danger' role='alert'>Error al obtener los permisos: " . $conn->error . "</div>";
+                        }
+                    }
+                }
+
             } else {
                 echo "<div class='alert alert-danger' role='alert'>Error al obtener las tablas de la base de datos: " . $conn->error . "</div>";
             }
