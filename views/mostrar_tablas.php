@@ -50,7 +50,8 @@
                 // Botones para agregar datos, ver características y ver permisos
                 echo "<div class='text-center mt-4'>";
                 echo "<div class='btn-group'>";
-                echo "<a href='../includes/formulario.php?server=$server&username=$username&password=$password&database=$database&table=$table' class='btn btn-success mr-2'>Insertar datos</a>";
+                echo "<a href='../includes/inserts.php?server=$server&username=$username&password=$password&database=$database&table=$table' class='btn btn-success mr-2'>Insertar datos</a>";
+                echo "<a href='../includes/executes.php?server=$server&username=$username&password=$password&database=$database' class='btn btn-primary mr-2'>Consulta</a>";
                 echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_characteristics' class='btn btn-info mr-2'>Características</a>";
                 echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_grants' class='btn btn-warning'>Veure els seus permisos</a>";
                 echo "</div>";

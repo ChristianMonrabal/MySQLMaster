@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Registro</title>
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 20px;
+            padding-bottom: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            padding: 15px;
+            margin: auto;
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container mt-5">
+    <div class="container">
         <h2>Editar Registro</h2>
         <?php
         // Verificar si se recibió el nombre de la tabla y el ID como parámetros GET
@@ -72,7 +86,7 @@
                     <input type="hidden" name="table" value="<?php echo $table; ?>">
                     <button type="submit" class="btn btn-primary">Actualizar</button>
                 </form>
-                <?php
+        <?php
             } else {
                 echo "No se encontraron resultados.";
             }
@@ -90,4 +104,5 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
