@@ -1,3 +1,81 @@
+<?php
+// Inicia la sesión si aún no se ha iniciado
+session_start();
+
+// Verificar si se recibieron los datos de conexión como parámetros GET
+if (isset($_GET['server'], $_GET['username'], $_GET['password'], $_GET['database'])) {
+    // Almacena los datos de conexión en variables de sesión
+    $_SESSION['server'] = $_GET['server'];
+    $_SESSION['username'] = $_GET['username'];
+    $_SESSION['password'] = $_GET['password'];
+    $_SESSION['database'] = $_GET['database'];
+}
+
+// Verifica si se envió una consulta SQL
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["query"])) {
+    // Verifica si existen los datos de conexión en las variables de sesión
+    if (isset($_SESSION['server'], $_SESSION['username'], $_SESSION['password'], $_SESSION['database'])) {
+        // Obtiene la consulta SQL enviada por el formulario
+        $query = $_POST['query'];
+
+        // Obtiene los datos de conexión de las variables de sesión
+        $server = $_SESSION['server'];
+        $username = $_SESSION['username'];
+        $password = $_SESSION['password'];
+        $database = $_SESSION['database'];
+
+        // Crea la conexión
+        $conn = new mysqli($server, $username, $password, $database);
+
+        // Verifica la conexión
+        if ($conn->connect_error) {
+            die("<div class='alert alert-danger mt-3' role='alert'>Error al conectar a la base de datos: " . $conn->connect_error . "</div>");
+        }
+
+        // Ejecuta la consulta
+        $result = $conn->query($query);
+
+        if ($result === TRUE) {
+            echo "<div class='alert alert-success mt-3' role='alert'>Consulta ejecutada correctamente.</div>";
+        } elseif ($result === FALSE) {
+            echo "<div class='alert alert-danger mt-3' role='alert'>Error al ejecutar la consulta: " . $conn->error . "</div>";
+        } else {
+            // Muestra resultados si la consulta es un SELECT
+            if ($result->num_rows > 0) {
+                echo "<h2 class='mt-4'>Resultados de la consulta:</h2>";
+                echo "<div class='table-responsive'>";
+                echo "<table class='table'>";
+                // Muestra encabezados de columnas
+                echo "<thead><tr>";
+                while ($field = $result->fetch_field()) {
+                    echo "<th>{$field->name}</th>";
+                }
+                echo "</tr></thead>";
+                // Muestra datos de filas
+                echo "<tbody>";
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    foreach ($row as $value) {
+                        echo "<td>{$value}</td>";
+                    }
+                    echo "</tr>";
+                }
+                echo "</tbody>";
+                echo "</table>";
+                echo "</div>";
+            } else {
+                echo "<div class='alert alert-info mt-3' role='alert'>La consulta no devolvió resultados.</div>";
+            }
+        }
+
+        // Cierra la conexión
+        $conn->close();
+    } else {
+        echo "<div class='alert alert-danger mt-3' role='alert'>Error: No se han proporcionado datos de conexión.</div>";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -17,81 +95,17 @@
                         <label for="query">Consulta SQL:</label>
                         <input type="text" class="form-control" id="query" name="query" required>
                     </div>
-                    <!-- Campos ocultos para enviar los datos de conexión -->
-                    <input type="hidden" name="server" value="<?php echo $_GET['server']; ?>">
-                    <input type="hidden" name="username" value="<?php echo $_GET['username']; ?>">
-                    <input type="hidden" name="password" value="<?php echo $_GET['password']; ?>">
-                    <input type="hidden" name="database" value="<?php echo $_GET['database']; ?>">
+                    <!-- Campos ocultos para enviar los datos de conexión si existen en las variables de sesión -->
+                    <input type="hidden" name="server" value="<?php echo isset($_SESSION['server']) ? $_SESSION['server'] : ''; ?>">
+                    <input type="hidden" name="username" value="<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>">
+                    <input type="hidden" name="password" value="<?php echo isset($_SESSION['password']) ? $_SESSION['password'] : ''; ?>">
+                    <input type="hidden" name="database" value="<?php echo isset($_SESSION['database']) ? $_SESSION['database'] : ''; ?>">
+
                     <button type="submit" class="btn btn-primary">Ejecutar Consulta</button>
                 </form>
             </div>
         </div>
 
-        <?php
-        // Bloque de código PHP para mostrar los resultados de la consulta
-        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["query"])) {
-            // Obtener los datos del formulario y ejecutar la consulta
-            $server = $_POST['server'];
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $database = $_POST['database'];
-            $query = $_POST['query'];
-
-            // Crear la conexión
-            $conn = new mysqli($server, $username, $password, $database);
-
-            // Verificar la conexión
-            if ($conn->connect_error) {
-                die("<div class='alert alert-danger mt-3' role='alert'>Error al conectar a la base de datos: " . $conn->connect_error . "</div>");
-            }
-
-            // Ejecutar la consulta
-            $result = $conn->query($query);
-
-            if ($result === TRUE) {
-                echo "<div class='alert alert-success mt-3' role='alert'>Consulta ejecutada correctamente.</div>";
-            } elseif ($result === FALSE) {
-                echo "<div class='alert alert-danger mt-3' role='alert'>Error al ejecutar la consulta: " . $conn->error . "</div>";
-            } else {
-                // Mostrar resultados si la consulta es un SELECT
-                if ($result->num_rows > 0) {
-                    echo "<h2 class='mt-4'>Resultados de la consulta:</h2>";
-                    echo "<div class='table-responsive'>";
-                    echo "<table class='table'>";
-                    // Mostrar encabezados de columnas
-                    echo "<thead><tr>";
-                    while ($field = $result->fetch_field()) {
-                        echo "<th>{$field->name}</th>";
-                    }
-                    // Agregar encabezados para los botones de edición y eliminación
-                    echo "<th>Editar</th>";
-                    echo "<th>Eliminar</th>";
-                    echo "</tr></thead>";
-                    // Mostrar datos de filas
-                    echo "<tbody>";
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        foreach ($row as $value) {
-                            echo "<td>{$value}</td>";
-                        }
-                        // Agregar botones de edición y eliminación con enlaces a scripts PHP
-                        echo "<td><a href='./updates.php?server=$server&username=$username&password=$password&database=$database&table=$table&id={$row['id']}' class='btn btn-primary btn-sm'>Editar</a></td>";
-                        echo "<td><a href='./drops.php?server=$server&username=$username&password=$password&database=$database&table=$table&id={$row['id']}' class='btn btn-danger btn-sm'>Eliminar</a></td>";
-                        echo "</tr>";
-                    }
-                    echo "</tbody>";
-                    echo "</table>";
-                    echo "</div>";
-                } else {
-                    echo "<div class='alert alert-info mt-3' role='alert'>La consulta no devolvió resultados.</div>";
-                }
-            }
-
-            // Cerrar la conexión
-            $conn->close();
-        }
-        ?>
-    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
