@@ -38,7 +38,7 @@
                 // Mostrar las tablas de la base de datos especificada
                 echo "<div class='text-right mb-4 font-weight-bold'>Usuario conectado: <strong>$username</strong></div>";
                 echo "<div class='text-center'>"; // Contenedor para centrar el encabezado
-                echo "<h2>Tablas de la Base de Datos '$database':</h2>";
+                echo "<h2>Tablas de la Base de Datos $database</h2>";
                 echo "</div>"; 
                 echo "<ul class='list-group'>";
                 while ($row = $result->fetch_array()) {
@@ -71,7 +71,10 @@
                     // Verificar si la consulta fue exitosa
                     if ($result_table) {
                         // Mostrar el contenido de la tabla con botones de editar y eliminar
-                        echo "<h2 class='mt-5'>Contenido de la tabla '$table' en la Base de Datos '$database':</h2>";
+                        echo "<div class='container mt-5'>";
+                        echo "<div class='text-center'>";
+                        echo "<h2 class='mt-5'>Contenido de la tabla $table</h2>";
+                        echo "</div>";
                         echo "<table class='table table-bordered'>";
                         // Mostrar los encabezados de las columnas
                         echo "<thead class='thead-dark'>";
@@ -101,10 +104,11 @@
                         }
                         echo "</tbody>";
                         echo "</table>";
+                        echo "</div>"; // Cierre del contenedor
                     } else {
                         echo "<div class='alert alert-danger' role='alert'>Error al obtener el contenido de la tabla: " . $conn->error . "</div>";
                     }
-                }
+                }                    
 
                 // Verificar si se recibió el parámetro action como un parámetro GET
                 if (isset($_GET['action'])) {
@@ -119,7 +123,9 @@
                         // Verificar si la consulta fue exitosa
                         if ($result_describe) {
                             // Mostrar las características de la tabla
-                            echo "<h2>Características de la tabla '$table':</h2>";
+                            echo "<div class='container mt-5'>";
+                            echo "<div class='text-center'>";
+                            echo "<h2>Características de la tabla $table</h2>";
                             echo "<table class='table table-bordered'>";
                             echo "<thead class='thead-dark'>";
                             echo "<tr>";
@@ -155,8 +161,11 @@
                         // Verificar si la consulta fue exitosa
                         if ($result_grants) {
                             // Mostrar los resultados de SHOW GRANTS en un div con desplazamiento vertical
+                            echo "<div class='container mt-5'>";
+                            echo "<div class='text-center'>";
+                            echo "<h2>Permisos de $username en la base de datos $database</h2>";
+                            echo "</div>";
                             echo "<div style='overflow-x: auto;'>";
-                            echo "<h2>Permisos del usuario en la base de datos '$database':</h2>";
                             echo "<table class='table table-bordered'>";
                             echo "<thead class='thead-dark'>";
                             echo "<tr>";
@@ -174,9 +183,11 @@
                             echo "</tbody>";
                             echo "</table>";
                             echo "</div>";
+                            echo "</div>"; // Cierre del contenedor
                         } else {
                             echo "<div class='alert alert-danger' role='alert'>Error al obtener los permisos: " . $conn->error . "</div>";
                         }
+                        
                     }
                 }
 

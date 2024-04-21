@@ -17,8 +17,8 @@ if (isset($_GET['table']) && isset($_GET['id']) && isset($_GET['server']) && iss
     }
 
     // Consulta SQL para eliminar la fila correspondiente
-    $sql = "DELETE FROM $table WHERE id=$id"; // Reemplaza 'id' con el nombre correcto de tu columna de identificación
-
+    $sql = "DELETE FROM $table WHERE id=$id"; 
+    
     if ($conn->query($sql) === TRUE) {
         echo "La fila ha sido eliminada correctamente.";
     } else {

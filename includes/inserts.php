@@ -72,7 +72,7 @@ if (isset($_GET['server']) && isset($_GET['username']) && isset($_GET['password'
         <body>
             <div class="container">
                 <h2 class="mb-4">Insertar Datos en <?php echo $table; ?></h2>
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <form action="#" method="post">
                     <?php
                     // Mostrar los campos del formulario según la estructura de la tabla
                     $result_describe->data_seek(0); // Reiniciar el puntero del resultado

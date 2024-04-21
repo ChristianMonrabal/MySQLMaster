@@ -22,9 +22,11 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2 class="mb-4">Inicio de sesión</h2>
-        <form action="./views/mostrar.php" method="post">
+            <div class="container mt-5">
+            <div class="text-center">
+                <h2 class="mb-4">Inicio de sesión</h2>
+            </div>        
+            <form action="./views/mostrar.php" method="post">
             <div class="form-group">
                 <label for="server">Nombre del servidor:</label>
                 <input type="text" class="form-control" id="server" name="server" value="localhost:3306">
