@@ -63,6 +63,9 @@
                     while ($field = $result->fetch_field()) {
                         echo "<th>{$field->name}</th>";
                     }
+                    // Agregar encabezados para los botones de edición y eliminación
+                    echo "<th>Editar</th>";
+                    echo "<th>Eliminar</th>";
                     echo "</tr></thead>";
                     // Mostrar datos de filas
                     echo "<tbody>";
@@ -71,6 +74,9 @@
                         foreach ($row as $value) {
                             echo "<td>{$value}</td>";
                         }
+                        // Agregar botones de edición y eliminación con enlaces a scripts PHP
+                        echo "<td><a href='./updates.php?server=$server&username=$username&password=$password&database=$database&table=$table&id={$row['id']}' class='btn btn-primary btn-sm'>Editar</a></td>";
+                        echo "<td><a href='./drops.php?server=$server&username=$username&password=$password&database=$database&table=$table&id={$row['id']}' class='btn btn-danger btn-sm'>Eliminar</a></td>";
                         echo "</tr>";
                     }
                     echo "</tbody>";
