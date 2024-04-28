@@ -32,42 +32,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["query"])) {
             die("<div class='alert alert-danger mt-3' role='alert'>Error al conectar a la base de datos: " . $conn->connect_error . "</div>");
         }
 
-        // Valida la sintaxis de la consulta
-        if (!$conn->query($query)) {
-            echo "<div class='alert alert-danger mt-3' role='alert'>La sintaxis de la consulta no es correcta.</div>";
-        } else {
-            // Ejecuta la consulta
-            $result = $conn->query($query);
+        // Ejecuta la consulta
+        $result = $conn->query($query);
 
-            if ($result === TRUE) {
-                echo "<div class='alert alert-success mt-3' role='alert'>Consulta ejecutada correctamente.</div>";
-            } else {
-                // Muestra resultados si la consulta es un SELECT
-                if ($result->num_rows > 0) {
-                    echo "<h2 class='mt-4'>Resultados de la consulta:</h2>";
-                    echo "<div class='table-responsive'>";
-                    echo "<table class='table'>";
-                    // Muestra encabezados de columnas
-                    echo "<thead><tr>";
-                    while ($field = $result->fetch_field()) {
-                        echo "<th>{$field->name}</th>";
-                    }
-                    echo "</tr></thead>";
-                    // Muestra datos de filas
-                    echo "<tbody>";
-                    while ($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        foreach ($row as $value) {
-                            echo "<td>{$value}</td>";
-                        }
-                        echo "</tr>";
-                    }
-                    echo "</tbody>";
-                    echo "</table>";
-                    echo "</div>";
-                } else {
-                    echo "<div class='alert alert-info mt-3' role='alert'>La consulta no devolvió resultados.</div>";
+        if ($result === TRUE) {
+            echo "<div class='alert alert-success mt-3' role='alert'>Consulta ejecutada correctamente.</div>";
+        } elseif ($result === FALSE) {
+            echo "<div class='alert alert-danger mt-3' role='alert'>Error al ejecutar la consulta: " . $conn->error . "</div>";
+        } else {
+            // Muestra resultados si la consulta es un SELECT
+            if ($result->num_rows > 0) {
+                echo "<h2 class='mt-4'>Resultados de la consulta:</h2>";
+                echo "<div class='table-responsive'>";
+                echo "<table class='table'>";
+                // Muestra encabezados de columnas
+                echo "<thead><tr>";
+                while ($field = $result->fetch_field()) {
+                    echo "<th>{$field->name}</th>";
                 }
+                echo "</tr></thead>";
+                // Muestra datos de filas
+                echo "<tbody>";
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    foreach ($row as $value) {
+                        echo "<td>{$value}</td>";
+                    }
+                    echo "</tr>";
+                }
+                echo "</tbody>";
+                echo "</table>";
+                echo "</div>";
+            } else {
+                echo "<div class='alert alert-info mt-3' role='alert'>La consulta no devolvió resultados.</div>";
             }
         }
 
