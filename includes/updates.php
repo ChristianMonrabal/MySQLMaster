@@ -25,8 +25,8 @@
     <div class="container">
         <h2>Editar Registro</h2>
         <?php
-        // Verificar si se recibió el nombre de la tabla y el ID como parámetros GET
-        if (isset($_GET['table']) && isset($_GET['id']) && isset($_GET['server']) && isset($_GET['username']) && isset($_GET['password']) && isset($_GET['database'])) {
+        // Verificar si se recibieron los parámetros necesarios
+        if (isset($_GET['table'], $_GET['id'], $_GET['server'], $_GET['username'], $_GET['password'], $_GET['database'])) {
             $table = $_GET['table'];
             $id = $_GET['id'];
             $server = $_GET['server'];
@@ -44,10 +44,12 @@
 
             // Verificar si se envió el formulario
             if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                // Obtener los datos del formulario
+                // Construir la cadena de actualización
                 $update_values = array();
                 foreach ($_POST as $key => $value) {
-                    $update_values[] = "$key='$value'";
+                    if ($key != 'id' && $key != 'table') {
+                        $update_values[] = "$key='$value'";
+                    }
                 }
                 $update_query = implode(", ", $update_values);
 
@@ -72,7 +74,7 @@
                 // Mostrar el formulario con los datos existentes
                 $row = $result->fetch_assoc();
                 ?>
-                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+                <form action="<?php echo $_SERVER['PHP_SELF'] . "?table=$table&id=$id&server=$server&username=$username&password=$password&database=$database"; ?>" method="post">
                     <!-- Crear inputs para cada columna de la fila -->
                     <?php foreach ($row as $column => $value): ?>
                         <?php if ($column != 'id'): ?> <!-- Excluir la columna de ID -->
