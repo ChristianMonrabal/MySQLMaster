@@ -78,6 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["query"])) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -85,31 +86,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["query"])) {
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container mt-5">
-        <h2 class="text-center mb-4">Ejecutar Consulta SQL</h2>
+        <h1 class="text-center mb-4">Ejecutar Consulta SQL</h1>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                     <div class="form-group">
                         <label for="query">Consulta SQL:</label>
-                        <input type="text" class="form-control" id="query" name="query" required>
+                        <input type="text" class="form-control" id="query" name="query" value="<?php echo isset($_POST['query']) ? htmlspecialchars($_POST['query']) : ''; ?>" required>
                     </div>
-                    <!-- Campos ocultos para enviar los datos de conexión si existen en las variables de sesión -->
-                    <input type="hidden" name="server" value="<?php echo isset($_SESSION['server']) ? $_SESSION['server'] : ''; ?>">
-                    <input type="hidden" name="username" value="<?php echo isset($_SESSION['username']) ? $_SESSION['username'] : ''; ?>">
-                    <input type="hidden" name="password" value="<?php echo isset($_SESSION['password']) ? $_SESSION['password'] : ''; ?>">
-                    <input type="hidden" name="database" value="<?php echo isset($_SESSION['database']) ? $_SESSION['database'] : ''; ?>">
-
                     <button type="submit" class="btn btn-primary">Ejecutar Consulta</button>
                 </form>
             </div>
         </div>
-
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
