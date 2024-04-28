@@ -43,7 +43,7 @@
                 echo "<ul class='list-group'>";
                 while ($row = $result->fetch_array()) {
                     // Generar enlaces con datos de conexión y nombre de la tabla como parámetros GET
-                    echo "<li class='list-group-item'><a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&table=" . $row[0] . "'>" . $row[0] . "</a></li>";
+                    echo "<li class='list-group-item'><a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&table=$table" . $row[0] . "'>" . $row[0] . "</a></li>";
                 }
                 echo "</ul>";
 
@@ -53,7 +53,7 @@
                 echo "<a href='../includes/inserts.php?server=$server&username=$username&password=$password&database=$database&table=$table' class='btn btn-success mr-2'>Insertar datos</a>";
                 echo "<a href='../includes/executes.php?server=$server&username=$username&password=$password&database=$database' class='btn btn-primary mr-2'>Consulta</a>";
                 echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_characteristics' class='btn btn-info mr-2'>Características</a>";
-                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_grants' class='btn btn-warning'>Veure els seus permisos</a>";
+                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_grants' class='btn btn-warning'>Ver permisos</a>";
                 echo "</div>";
                 echo "</div>";
                 
@@ -96,7 +96,7 @@
                                 echo "<td>$value</td>";
                             }
                             // Obtener automáticamente el id de la fila
-                            $id = $row_table['id']; // Asegúrate de reemplazar 'id' con el nombre correcto de tu columna de identificación
+                            $id = $row_table['id']; 
                             // Botones de editar y eliminar con el id correspondiente
                             echo "<td><a href='../includes/updates.php?server=$server&username=$username&password=$password&database=$database&table=$table&id=$id' class='btn btn-primary btn-sm'>Editar</a></td>";
                             echo "<td><a href='../includes/drops.php?server=$server&username=$username&password=$password&database=$database&table=$table&id=$id' class='btn btn-danger btn-sm'>Eliminar</a></td>";
