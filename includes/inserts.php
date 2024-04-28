@@ -1,6 +1,6 @@
 <?php
 // Verificar si se recibió el nombre de la tabla como un parámetro GET
-if (isset($_GET['server']) && isset($_GET['username']) && isset($_GET['password']) && isset($_GET['database']) && isset($_GET['table'])) {
+if (isset($_GET['server'], $_GET['username'], $_GET['password'], $_GET['database'], $_GET['table'])) {
     $server = $_GET['server'];
     $username = $_GET['username'];
     $password = $_GET['password'];
