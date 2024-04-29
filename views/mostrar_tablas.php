@@ -9,53 +9,55 @@
 </head>
 <body>
     <div class="container mt-5">
-        <?php
-        session_start(); // Inicia la sesión si aún no se ha iniciado
+    <?php
+session_start(); // Inicia la sesión si aún no se ha iniciado
 
-        // Verificar si se recibió el nombre de la base de datos como un parámetro GET
-        if (isset($_GET['database']) && !empty($_GET['database'])) {
-            $database = $_GET['database'];
-            $server = $_GET['server'];
-            $username = $_GET['username'];
-            $password = $_GET['password'];
+// Verificar si se recibió el nombre de la base de datos como un parámetro GET
+if (isset($_GET['database']) && !empty($_GET['database'])) {
+    $database = $_GET['database'];
+    $server = $_GET['server'];
+    $username = $_GET['username'];
+    $password = $_GET['password'];
 
-            // Crear la conexión
-            $conn = new mysqli($server, $username, $password, $database);
+    // Crear la conexión
+    $conn = new mysqli($server, $username, $password, $database);
 
-            // Verificar la conexión
-            if ($conn->connect_error) {
-                die("<div class='alert alert-danger' role='alert'>Error al conectar a la base de datos: " . $conn->connect_error . "</div>");
-            }
+    // Verificar la conexión
+    if ($conn->connect_error) {
+        die("<div class='alert alert-danger' role='alert'>Error al conectar a la base de datos: " . $conn->connect_error . "</div>");
+    }
 
-            // Consulta SQL para obtener las tablas de la base de datos especificada
-            $sql = "SHOW TABLES FROM $database";
+    // Consulta SQL para obtener las tablas de la base de datos especificada
+    $sql = "SHOW TABLES FROM $database";
 
-            // Ejecutar la consulta
-            $result = $conn->query($sql);
+    // Ejecutar la consulta
+    $result = $conn->query($sql);
 
-            // Verificar si la consulta fue exitosa
-            if ($result) {
-                // Mostrar las tablas de la base de datos especificada
-                echo "<div class='text-right mb-4 font-weight-bold'>Usuario conectado: <strong>$username</strong></div>";
-                echo "<div class='text-center'>"; // Contenedor para centrar el encabezado
-                echo "<h2>Tablas de la Base de Datos $database</h2>";
-                echo "</div>"; 
-                echo "<ul class='list-group'>";
-                while ($row = $result->fetch_array()) {
-                    // Generar enlaces con datos de conexión y nombre de la tabla como parámetros GET
-                    echo "<li class='list-group-item'><a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&table=$table" . $row[0] . "'>" . $row[0] . "</a></li>";
-                }
-                echo "</ul>";
+    // Verificar si la consulta fue exitosa
+    if ($result) {
+        // Mostrar las tablas de la base de datos especificada
+        echo "<div class='text-right mb-4 font-weight-bold'>Usuario conectado: <strong>$username</strong></div>";
+        echo "<div class='text-center'>"; // Contenedor para centrar el encabezado
+        echo "<h2>Tablas de la Base de Datos $database</h2>";
+        echo "</div>"; 
+        echo "<ul class='list-group'>";
+        while ($row = $result->fetch_array()) {
+            $table = $row[0]; // Inicializar $table con el nombre de la tabla actual
+            // Generar enlaces con datos de conexión y nombre de la tabla como parámetros GET
+            echo "<li class='list-group-item'><a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&table=" . $table . "'>" . $table . "</a></li>";
+        }
+        echo "</ul>";
 
-                // Botones para agregar datos, ver características y ver permisos
-                echo "<div class='text-center mt-4'>";
-                echo "<div class='btn-group'>";
-                echo "<a href='../includes/inserts.php?server=$server&username=$username&password=$password&database=$database&table=$table' class='btn btn-success mr-2'>Insertar datos</a>";
-                echo "<a href='../includes/executes.php?server=$server&username=$username&password=$password&database=$database' class='btn btn-primary mr-2'>Consulta</a>";
-                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_characteristics' class='btn btn-info mr-2'>Características</a>";
-                echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_grants' class='btn btn-warning'>Ver permisos</a>";
-                echo "</div>";
-                echo "</div>";
+        // Botones para agregar datos, ver características y ver permisos
+        echo "<div class='text-center mt-4'>";
+        echo "<div class='btn-group'>";
+        echo "<a href='../includes/inserts.php?server=$server&username=$username&password=$password&database=$database&table=" . (isset($table) ? $table : '') . "' class='btn btn-success mr-2'>Insertar datos</a>";
+        echo "<a href='../includes/executes.php?server=$server&username=$username&password=$password&database=$database' class='btn btn-primary mr-2'>Consulta</a>";
+        echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_characteristics' class='btn btn-info mr-2'>Características</a>";
+        echo "<a href='mostrar_tablas.php?server=$server&username=$username&password=$password&database=$database&action=show_grants' class='btn btn-warning'>Ver permisos</a>";
+        echo "</div>";
+        echo "</div>";
+
                 
                 // Verificar si se recibió el nombre de la tabla como un parámetro GET
                 if (isset($_GET['table']) && !empty($_GET['table'])) {
