@@ -10,7 +10,7 @@
 <body>
     <div class="container mt-5">
     <?php
-session_start(); // Inicia la sesión si aún no se ha iniciado
+session_start(); 
 
 // Verificar si se recibió el nombre de la base de datos como un parámetro GET
 if (isset($_GET['database']) && !empty($_GET['database'])) {

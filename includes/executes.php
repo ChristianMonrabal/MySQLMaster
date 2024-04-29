@@ -1,5 +1,4 @@
 <?php
-// Inicia la sesión si aún no se ha iniciado
 session_start();
 
 // Verificar si se recibieron los datos de conexión como parámetros GET
