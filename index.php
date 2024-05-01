@@ -21,12 +21,12 @@
             </div>
             <div class="form-group">
                 <label for="username">Usuario:</label>
-                <input type="text" class="form-control" id="username" name="username" value="root">
+                <input type="text" class="form-control" id="username" name="username">
                 <div class="error-message" id="username-error"></div>
             </div>
             <div class="form-group">
                 <label for="password">Contraseña:</label>
-                <input type="password" class="form-control" id="password" name="password" value="qweQWE123">
+                <input type="password" class="form-control" id="password" name="password">
                 <div class="error-message" id="password-error"></div>
             </div>
             <div class="form-group">
